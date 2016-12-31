@@ -2,7 +2,7 @@ from graphics import *
 from math import *
 from noise import pnoise1
 import time
-import random
+from random import random, uniform,
 
 
 FRAME_RATE = 60
@@ -96,9 +96,9 @@ class Bubble:
                 self.die()
 
     def apply_force(self, forces):
-        for each force in forces:
-            offset_x = ...
-            offset_y = ...
+        for force in forces:
+            offset_x += self.velocity.x + force.x
+            offset_y += self.velocity.y + force.y
         self.drawing.move(offset_x, offset_y)
         self.pos_x = self.drawing.getCenter().getX()
         self.pos_y = self.drawing.getCenter().getY()
@@ -138,18 +138,25 @@ class DNA:
 
     def __add__(self, other):
         # this is where we splice together two genes
-        # should we mutate here as well?
-        length = self.length
+        length = self.size
         # spliced genes are a simple mean of matching elements
         spliced_genes = [sum(gene) / len(gene) for gene in zip(self.genes, other.genes)]
+        # another option that just randomly selects genes between the two parents
+        # spliced_genes = [gene[round(random())] for gene in zip(self.genes, other.genes)]
         return DNA(length, spliced_genes)
-        
-            
+
+    def mutate(self, mutation_rate):
+        for index, gene in enumerate(self.genes):
+            if random() < mutation_rate:
+                self.genes[index] = gene + uniform(-1, 1)
+
+
+
 def main():
     win = GraphWin(width = 600, height = 400) # create a window
-    t = Target(300, 75, 10)
-    t.render(win)
-    bubbles = [Bubble(win.width/2, win.height + 15, 6, 225, t) for x in range(POPULATION)]
+    target = Target(300, 75, 10)
+    target.render(win)
+    bubbles = [Bubble(win.width/2, win.height + 15, 6, 225, target) for x in range(POPULATION)]
     for bubble in bubbles:
         bubble.render(win) 
     while not win.checkMouse():
@@ -157,8 +164,7 @@ def main():
             bubble.update(win)
         time.sleep(1/FRAME_RATE)
     while True:
-        next_gen = mate_and_mutate([bubble.heading_map for bubble in bubbles], [bubble.fitness for bubble in bubbles], POPULATION)
-        bubbles = [Bubble(win.width/2, win.height + 15, 6, 225, t, next_gen[x]) for x in range(POPULATION)]
+        bubbles = [Bubble(win.width/2, win.height + 15, 6, 225, target, next_gen[x]) for x in range(POPULATION)]
         for bubble in bubbles:
             bubble.render(win) 
         while not all([b.dead for b in bubbles]):
