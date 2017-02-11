@@ -5,8 +5,8 @@ from time import sleep
 from random import random, uniform, randrange, choices
 from vector import Vector
 
-FRAME_RATE = 60
-POPULATION = 25
+FRAME_RATE = 120
+POPULATION = 10
 NUMBER_OBSTACLES = 5
 GRAVITY_FACTOR = 0.05
 MUTATION_RATE = 0.25

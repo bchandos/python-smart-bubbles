@@ -1,3 +1,5 @@
+from math import sqrt, atan2, cos, sin
+
 class Vector:
     """ Basic 2D Vector object with operator overrides """
     def __init__(self, x=0.0, y=0.0):
