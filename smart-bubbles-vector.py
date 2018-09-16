@@ -5,8 +5,8 @@ from time import sleep
 from random import random, uniform, randrange, choices
 from vector import Vector
 
-FRAME_RATE = 120
-POPULATION = 10
+FRAME_RATE = 60
+POPULATION = 15
 NUMBER_OBSTACLES = 5
 GRAVITY_FACTOR = 0.05
 MUTATION_RATE = 0.25
@@ -31,6 +31,7 @@ class Target:
         self.pos_y = pos_y
         self.radius = radius
         self.drawing = Circle(Point(self.pos_x, self.pos_y), radius)
+        self.drawing.setFill('green')
 
     def render(self, window):
         self.drawing.draw(window)
@@ -114,6 +115,7 @@ class DNA:
             self.genes = genes
             self.size = len(self.genes)
         else:
+            # this section needs to be rewritten
             self.size = int(size)
             noise_seed = uniform(0, 1024)
             heading_seed = uniform(1/3, 2/3)
@@ -123,9 +125,9 @@ class DNA:
         # this is where we splice together two DNA gene sets
         length = self.size
         # spliced genes are a simple mean of matching elements
-        # spliced_genes = [sum(gene) / len(gene) for gene in zip(self.genes, other.genes)]
+        spliced_genes = [sum(gene) / len(gene) for gene in zip(self.genes, other.genes)]
         # another option that just randomly selects genes between the two parents
-        spliced_genes = [gene[round(random())] for gene in zip(self.genes, other.genes)]
+        # spliced_genes = [gene[round(random())] for gene in zip(self.genes, other.genes)]
         return DNA(length, spliced_genes)
 
     def mutate(self, mutation_rate):
@@ -140,7 +142,7 @@ def mate_and_mutate(population):
     for n in range(len(population)):
         parents = choices(dnas, weights=fitnesses, k=2)
         child = DNA(len(parents[0]), parents[0]) + DNA(len(parents[1]), parents[1])
-        child.mutate(MUTATION_RATE)
+        #child.mutate(MUTATION_RATE)
         children.append(child)
     return children
 

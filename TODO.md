@@ -1,3 +1,4 @@
+#TODO
 * Target and obstacle collision detection
 * Correct physics issues
     * Attempt to apply Schiffman's Nature of Code algorithm
